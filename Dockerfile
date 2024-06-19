@@ -1,7 +1,7 @@
 FROM --platform=$BUILDPLATFORM node:18-alpine as frontend
 WORKDIR /src/web
 COPY web .
-RUN yarn install --ignore-optional
+RUN yarn install
 RUN yarn build
 
 FROM --platform=$BUILDPLATFORM rust:1.77-bookworm AS chef
@@ -18,9 +18,9 @@ FROM --platform=$BUILDPLATFORM chef AS builder
 
 ARG TARGETPLATFORM
 RUN case "${TARGETPLATFORM}" in \
-      "linux/arm64") echo "aarch64-unknown-linux-gnu" > /target.txt && echo "-C linker=aarch64-linux-gnu-gcc" > /flags.txt ;; \
-      "linux/amd64") echo "x86_64-unknown-linux-gnu" > /target.txt && echo "-C linker=x86_64-linux-gnu-gcc" > /flags.txt ;; \
-      *) exit 1 ;; \
+    "linux/arm64") echo "aarch64-unknown-linux-gnu" > /target.txt && echo "-C linker=aarch64-linux-gnu-gcc" > /flags.txt ;; \
+    "linux/amd64") echo "x86_64-unknown-linux-gnu" > /target.txt && echo "-C linker=x86_64-linux-gnu-gcc" > /flags.txt ;; \
+    *) exit 1 ;; \
     esac
 RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get update && \
