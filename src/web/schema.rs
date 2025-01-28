@@ -106,8 +106,6 @@ where
 #[derive(Deserialize, Debug, JsonSchema)]
 pub struct SearchParams {
     pub q: String,
-    #[serde(flatten)]
-    pub logs_params: LogsParams,
 }
 
 #[derive(Serialize, JsonSchema)]
@@ -163,4 +161,18 @@ pub struct UserLogPathParams {
     pub channel_id_type: ChannelIdType,
     pub channel: String,
     pub user: String,
+}
+
+#[derive(Serialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct ChannelLogsStats {
+    pub message_count: u64,
+    pub top_chatters: Vec<UserLogsStats>,
+}
+
+#[derive(Serialize, JsonSchema)]
+#[serde(rename_all = "camelCase")]
+pub struct UserLogsStats {
+    pub user_id: String,
+    pub message_count: u64,
 }
